@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HelloWorld from '../components/HelloWorld.vue'
+import Space from '../pages/Space.vue'
 const routes = [
     // {
     //   path: '/:catchAll(.*)',
@@ -19,13 +19,13 @@ const routes = [
     // },
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Space',
+      component: Space
     },
 ]
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(import.meta.env.VITE_BASE_URL),
     routes
   })
 //   router.beforeEach(() => {
