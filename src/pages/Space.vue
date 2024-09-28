@@ -12,12 +12,16 @@
   import * as THREE from 'three'
   import { onMounted, onBeforeUnmount, ref } from 'vue'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+  import Sphere from '../objects/Sphere';
   import Sun from '../objects/Sun';
-  import Star from '../objects/Star';
 
   const solarSystem = ref(null)
   let scene, camera, orbitControls, renderer
-  
+  let time = 0;
+  let sun = new Sun({
+    diameter: 20,
+  });
+
   const initScene = () => {
     const sceneElement = solarSystem.value
   
@@ -35,15 +39,13 @@
   
     setLights()
     setAxis()
-    const sun = new Sun();
+    // const sun = new Sun();
     // sun.addToScene(scene);
 
-  const star = new Star({
-    diameter: 20,
-  });
-  star.addToScene(scene);
 
-    animate()
+  sun.addToScene(scene);
+
+    animate(Sun)
   }
   
   const setLights = () => {
@@ -80,6 +82,9 @@
   const animate = () => {
     requestAnimationFrame(animate)
     orbitControls.update()
+    time += 0.01;
+
+    sun.sphere.material.uniforms.time.value = time;
     renderer.render(scene, camera)
   }
   
