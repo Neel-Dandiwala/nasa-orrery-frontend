@@ -16,7 +16,7 @@
   import Sun from '../objects/Sun';
 
   const solarSystem = ref(null)
-  let scene, camera, orbitControls, renderer
+  let scene, camera, orbitControls, renderer, cubeCamera, scene1, cubeRenderTarget
   let time = 0;
   let sun = new Sun({
     diameter: 20,
@@ -28,11 +28,21 @@
     scene = new THREE.Scene()
     
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 5 * Math.pow(10, 13))
-    camera.position.set(0, 0, 300)
+    camera.position.set(0, 0, 5)
     camera.lookAt(new THREE.Vector3(0, 0, 0))
   
     orbitControls = new OrbitControls(camera, sceneElement)
   
+    cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
+      format: THREE.RGBAFormat,
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipmapLinearFilter,
+      encoding: THREE.sRGBEncoding
+    });
+    scene1 = new THREE.Scene();
+    cubeCamera = new THREE.CubeCamera(0.1, 100, cubeRenderTarget); // Near, far, resolution
+    scene1.add(cubeCamera);
+
     renderer = new THREE.WebGLRenderer()
     renderer.setSize(window.innerWidth, window.innerHeight)
     sceneElement.appendChild(renderer.domElement)
@@ -43,19 +53,13 @@
     // sun.addToScene(scene);
 
 
-  sun.addToScene(scene);
+  sun.addToScene(scene, scene1);
 
     animate(Sun)
   }
   
   const setLights = () => {
     const ambientLightCount = 4
-
-    for (let i = 0; i < ambientLightCount; i++) {
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.175)
-      setObjectPosition(directionalLight, i)
-      scene.add(directionalLight)
-    }
   }
   
   const setObjectPosition = (object, index) => {
@@ -76,15 +80,21 @@
   }
   
   const setAxis = () => {
-    scene.rotation.x = 90 * 0.0174532925
+    // scene.rotation.x = 90 * 0.0174532925
   }
   
   const animate = () => {
     requestAnimationFrame(animate)
+    cubeCamera.position.copy(sun.sphere.position);
+    cubeCamera.update(renderer, scene1)
+    sun.sphere.material.uniforms.uPerlin.value = cubeRenderTarget.texture;
+
     orbitControls.update()
     time += 0.01;
 
     sun.sphere.material.uniforms.time.value = time;
+    
+    sun.innerSphere.material.uniforms.time.value = time;
     renderer.render(scene, camera)
   }
   
