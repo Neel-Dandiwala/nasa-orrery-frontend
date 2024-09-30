@@ -14,12 +14,16 @@
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
   import Sphere from '../objects/Sphere';
   import Sun from '../objects/Sun';
+  import Earth from '../objects/Earth';
 
   const solarSystem = ref(null)
   let scene, camera, orbitControls, renderer, cubeCamera, scene1, cubeRenderTarget
   let time = 0;
   let sun = new Sun({
     diameter: 20,
+  });
+  let earth = new Earth({
+    diameter: 0,
   });
 
   const initScene = () => {
@@ -28,7 +32,7 @@
     scene = new THREE.Scene()
     
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 5 * Math.pow(10, 13))
-    camera.position.set(0, 0, 5)
+    camera.position.set(1, 0, 0)
     camera.lookAt(new THREE.Vector3(0, 0, 0))
   
     orbitControls = new OrbitControls(camera, sceneElement)
@@ -52,14 +56,22 @@
     // const sun = new Sun();
     // sun.addToScene(scene);
 
-
-  sun.addToScene(scene, scene1);
-
+    earth.addToScene(scene);
+    //sun.addToScene(scene, scene1);
     animate(Sun)
   }
   
   const setLights = () => {
-    const ambientLightCount = 4
+    const ambientLightCount = 4;
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); 
+  //scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(1, 10, 10).normalize(); 
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+
   }
   
   const setObjectPosition = (object, index) => {
@@ -93,6 +105,7 @@
     time += 0.01;
 
     sun.sphere.material.uniforms.time.value = time;
+    earth.cloudSphere.material.uniforms.time.value = time;
     
     sun.innerSphere.material.uniforms.time.value = time;
     renderer.render(scene, camera)

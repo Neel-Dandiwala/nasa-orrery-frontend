@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { vertexShader as sunVertexShader, fragmentShader as sunFragmentShader } from '../shaders/SunShader';
-import { vertexShader as sunshineVertexShader, fragmentShader as sunshineFragmentShader } from '../shaders/SunshineShader';
-import { vertexShader as parentVertexShader, fragmentShader as parentFragmentShader } from '../shaders/Parent';
+import { vertexShader as sunVertexShader, fragmentShader as sunFragmentShader } from '../shaders/sun/Surface';
+import { vertexShader as sunshineVertexShader, fragmentShader as sunshineFragmentShader } from '../shaders/sun/Shine';
+import { vertexShader as parentVertexShader, fragmentShader as parentFragmentShader } from '../shaders/sun/Parent';
 
 export default class Sun {
   static DISTANCE_TO_KUIPER_BELT = 7479893535; 
