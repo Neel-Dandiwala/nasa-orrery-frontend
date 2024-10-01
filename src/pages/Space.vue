@@ -49,6 +49,8 @@
 
     renderer = new THREE.WebGLRenderer()
     renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     sceneElement.appendChild(renderer.domElement)
   
     setLights()
@@ -65,10 +67,10 @@
     const ambientLightCount = 4;
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); 
-  //scene.add(ambientLight);
+  scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(1, 10, 10).normalize(); 
+  directionalLight.position.set(5, 5, 5) 
   directionalLight.castShadow = true;
   scene.add(directionalLight);
 
@@ -105,8 +107,8 @@
     time += 0.01;
 
     sun.sphere.material.uniforms.time.value = time;
-    earth.cloudSphere.material.uniforms.time.value = time;
-    
+    earth.sphere.material.uniforms.time.value = time;
+    earth.sphere.material.uniforms.sunPosition.value.set(5, 0, 0).normalize();
     sun.innerSphere.material.uniforms.time.value = time;
     renderer.render(scene, camera)
   }

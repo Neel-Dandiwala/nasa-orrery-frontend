@@ -18,7 +18,6 @@ export default class Earth {
     this.lightTexture = this.textureLoader.load('/textures/earth/earth_lights_2048.png');
     this.cloudTexture = this.textureLoader.load('/textures/earth/earth_clouds_2048.png');
     this.sphere = this.createGeometry(); 
-    this.lightSphere = this.createLightGeometry();
     this.cloudSphere = this.createCloudGeometry();
   }
 
@@ -28,6 +27,7 @@ export default class Earth {
 
   createGeometry() {
     const geometry = new THREE.SphereBufferGeometry(0.2, 50, 50);
+    geometry.computeTangents();
     // const material = new THREE.MeshPhongMaterial({ 
     //   map: this.mapTexture,
     //   normalMap: this.normalMapTexture,
@@ -44,35 +44,23 @@ export default class Earth {
         uNormalMapTexture: { value: this.normalMapTexture },
         uSpecularMapTexture: { value: this.specularMapTexture },
         uCloudTexture: { value: this.cloudTexture },
-        sunPosition: { value: new THREE.Vector3(4, 0, 0) },
+        sunPosition: { value: new THREE.Vector3(5, 0, 0) },
+        uNormalPower: { value: 0.3 },
+        uPosition: { value: new THREE.Vector3(0,0,0)},
       },
       vertexShader: surfaceVertexShader,
       fragmentShader: surfaceFragmentShader,
     });
 
     const mesh = new THREE.Mesh(geometry, material); 
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
     
     const lightDistanceStrength = Earth.DISTANCE_TO_KUIPER_BELT * 2;
     const sunLight = new THREE.PointLight(Earth.LIGHT_COLOR, Earth.LIGHT_INTENSITY, lightDistanceStrength, Earth.LIGHT_DECAY_RATE);
     // mesh.rotation.x = Math.PI / 2; 
     mesh.position.set(0, 0, 0);
     // mesh.add(sunLight); 
-
-    return mesh;
-  }
-
-  createLightGeometry() {
-    const geometry = new THREE.SphereBufferGeometry(0.201, 50, 50);
-    const material = new THREE.MeshBasicMaterial({ 
-      map: this.lightTexture,
-      blending: THREE.AdditiveBlending,
-      transparent: true,
-      color: 0xffffff
-    });
-    material.map.encoding = THREE.sRGBEncoding;
-
-    const mesh = new THREE.Mesh(geometry, material); 
-    mesh.position.set(0, 0, 0);
 
     return mesh;
   }
@@ -97,7 +85,6 @@ export default class Earth {
 
   addToScene(scene) {
     scene.add(this.sphere);
-    scene.add(this.lightSphere);
     // scene.add(this.cloudSphere);
   }
 }
