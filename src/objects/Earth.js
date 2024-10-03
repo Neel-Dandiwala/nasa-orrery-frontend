@@ -27,7 +27,7 @@ export default class Earth {
 
   createGeometry() {
     const geometry = new THREE.SphereBufferGeometry(0.2, 50, 50);
-    geometry.computeTangents();
+    
     // const material = new THREE.MeshPhongMaterial({ 
     //   map: this.mapTexture,
     //   normalMap: this.normalMapTexture,
@@ -47,6 +47,7 @@ export default class Earth {
         sunPosition: { value: new THREE.Vector3(5, 0, 0) },
         uNormalPower: { value: 0.3 },
         uPosition: { value: new THREE.Vector3(0,0,0)},
+        cameraPosition: { value: new THREE.Vector3(1,0,0)}
       },
       vertexShader: surfaceVertexShader,
       fragmentShader: surfaceFragmentShader,

@@ -105,7 +105,7 @@
 
     orbitControls.update()
     time += 0.01;
-
+    earth.sphere.geometry.computeTangents();
     sun.sphere.material.uniforms.time.value = time;
     earth.sphere.material.uniforms.time.value = time;
     earth.sphere.material.uniforms.sunPosition.value.set(5, 0, 0).normalize();

@@ -57,6 +57,7 @@ void main() {
 
     float mixAmountTexture = 1.0 / (1.0 + exp(-20.0 * cosAngleSunToNormal));
     mixAmountTexture *= 1.0 + uNormalPower * (cosAngleSunToSurface - cosAngleSunToNormal);
+    
     mixAmountTexture = clamp(mixAmountTexture, 0.0, 1.0);
 
 
@@ -64,7 +65,7 @@ void main() {
 
     float specularRatio = texture2D(uSpecularMapTexture, vUv).r;
     specularRatio = 3.0 * specularRatio + 0.1;
-    vec3 specularVector = -reflect(-sunDirection, normal);
+    vec3 specularVector = -reflect(sunDirection, normal);
     vec3 surfacePosition = uPosition + vPosition;
     float specularPower = clamp(dot(specularVector, normalize(cameraPosition - surfacePosition)), 0.0, 1.0);
     finalColor += mixAmountTexture * pow(specularPower, 2.0) * specularRatio;
